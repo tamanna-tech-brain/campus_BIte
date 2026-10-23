@@ -1,54 +1,72 @@
-const mongoose = require(mongoose);
-const menuItemSchemas = new mongoose.Schema(
+const mongoose = require("mongoose");
+
+const menuItemSchema = new mongoose.Schema(
     {
-        name : {
-            type : String,
-            required : true,
-            trim : true,
+        name: {
+            type: String,
+            required: true,
+            trim: true,
         },
-        description : {
-            type : String,
-            default : "",
+        description: {
+            type: String,
+            default: "",
+            trim: true,
         },
-        category : {
-            type : String,
-            required : true,
-            trim : true,
+        category: {
+            type: String,
+            required: true,
+            trim: true,
         },
-        price : {
-            type : number,
-            required : true,
-            min : 0,
+        price: {
+            type: Number,
+            required: true,
+            min: 0,
         },
-        imageUrl : {
-            type : String,
-            default : "",
+        imageUrl: {
+            type: String,
+            default: "",
+            trim: true,
         },
-        totalStocks : {
-            type : Number,
-            required : true,
-            min : 0,
-            default : 0,
+        totalStock: {
+            type: Number,
+            required: true,
+            min: 0,
+            default: 0,
         },
-        availableStocks : {
-            type : Number,
-            required : true,
-            min : 0,
-            default : "",
+        availableStock: {
+            type: Number,
+            required: true,
+            min: 0,
+            default: 0,
         },
-        isAvailable : {
-            type : Boolean,
-            default : true,
+        stockDate: {
+            type: String,
+            default: () => new Date().toISOString().slice(0, 10),
         },
-        updatedBy : {
-            type : mongoose.Schema.Types.ObjectId,
-            ref : "user",
+        isAvailable: {
+            type: Boolean,
+            default: true,
+        },
+        averageRating: {
+            type: Number,
+            default: 0,
+            min: 0,
+            max: 5,
+        },
+        numReviews: {
+            type: Number,
+            default: 0,
+            min: 0,
+        },
+        updatedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
         },
     },
-    { timeStamps : true}
+    { timestamps: true }
 );
-menuItemSchemas,index(
-    {name : 1, stockDate : 1},
-    {unique : true}
-);
-module.export = mongoose.model("menuItem", menuItemSchemas);
+
+menuItemSchema.index({ category: 1, isAvailable: 1 });
+menuItemSchema.index({ name: 1 });
+
+module.exports = mongoose.models.MenuItem || mongoose.model("MenuItem", menuItemSchema);

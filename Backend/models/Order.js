@@ -72,6 +72,11 @@ const orderSchema = new mongoose.Schema(
             default: "pending",
         },
 
+        stockReserved: {
+            type: Boolean,
+            default: true,
+        },
+
         stockRestored: {
             type: Boolean,
             default: false,

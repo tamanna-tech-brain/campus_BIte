@@ -1,55 +1,59 @@
 const mongoose = require("mongoose");
-const paymentSchemas = new mongoose.Schema(
+
+const paymentSchema = new mongoose.Schema(
     {
-        order : {
-            type : mongoose.Schema.Types.ObjectId,
-            ref :  "order",
-            required : true,
-            unique : true,
+        order: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Order",
+            required: true,
+            unique: true,
         },
-        student : {
-            type : mongoose.Schema.Types.ObjectId,
-            ref : "User",
-            required : true,
+        student: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
         },
-        provider : {
-            type : String,
-            enum : ["razorpay"],
-            default : "razorpay",
+        provider: {
+            type: String,
+            enum: ["razorpay"],
+            default: "razorpay",
         },
-        razorpayOrderId : {
-            type : String,
-            unique : true,
-            sparse : true,
+        razorpayOrderId: {
+            type: String,
+            unique: true,
+            sparse: true,
         },
-        razorpayPaymentId : {
-            type : String,
-            unique : true,
-            Sparse : true,
+        razorpayPaymentId: {
+            type: String,
+            unique: true,
+            sparse: true,
         },
-        amount : {
-            type : Number,
-            required : true,
-            min : 0,
+        amount: {
+            type: Number,
+            required: true,
+            min: 0,
         },
-        currency : {
-            type : String,
-            enm : [
+        currency: {
+            type: String,
+            default: "INR",
+        },
+        status: {
+            type: String,
+            enum: [
                 "created",
                 "authorized",
                 "captured",
                 "failed",
                 "refunded",
             ],
-            default : "created",
+            default: "created",
         },
         webhookEventId: {
-      type: String,
+            type: String,
+        },
+        paidAt: Date,
     },
-
-    paidAt: Date,
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
-module.exports = mongoose.model("Payment", paymentSchemas);
+module.exports = mongoose.models.Payment || mongoose.model("Payment", paymentSchema);
